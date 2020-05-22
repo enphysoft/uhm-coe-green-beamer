@@ -33,6 +33,6 @@ command, anywhere you would like to split. If you use it only once, you will hav
 I hope you enjoy LaTex beamer or Emacs org-mode.
 
 Albert Kim 
-https://albertsk.org/
-albertsk@hawaii.edu
+
+(https://albertsk.org/, albertsk@hawaii.edu)
 
