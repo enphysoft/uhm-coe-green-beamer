@@ -17,7 +17,9 @@ In this Github page, I included full presentation contents as they are already p
 If you successfully compile "uhm-coe-green-template.tex", then this "uhm-coe-green-template.pdf" will be generated. In most Linux distribution, the compile command is
 
 $ pdflatex uhm-coe-green-template.tex
+
 or
+
 $ pdflatex uhm-coe-green-template
 
 where "$" indicates the terminal prompt that you don't need to type and LaTex extension .tex can be omitted or better to be omitted if you have a reference list to be generated using bibtex.
@@ -27,3 +29,10 @@ If you want to split a file into multiple sequential pieces, you can use
 \pause
 
 command, anywhere you would like to split. If you use it only once, you will have two pages of the same page number. The first page (slide) will contain the first half, and the second page will contain all. 
+
+I hope you enjoy LaTex beamer or Emacs org-mode.
+
+Albert Kim 
+https://albertsk.org/
+albertsk@hawaii.edu
+
