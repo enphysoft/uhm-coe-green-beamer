@@ -14,7 +14,14 @@ If you are not very familiar with Emacs, then you can just start preparing your 
 In this Github page, I included full presentation contents as they are already presented in NAMS 2030 conference. Anybody can understand the grammars of LaTex beamer mode, and simple modification of this template will allow you to make a professional presentation. If you are a power-point user, then you don't need to use LaTex beamer. But, most applied mathematicians and theorists enjoy beautiful math fonts of LaTex, which is this page is for.  
 
 ### uhm-coe-green-template.pdf
-If you successfully compile "uhm-coe-green-template.tex", then this "uhm-coe-green-template.pdf" will be generated. 
+If you successfully compile "uhm-coe-green-template.tex", then this "uhm-coe-green-template.pdf" will be generated. In most Linux distribution, the compile command is
+
+$ pdflatex uhm-coe-green-template.tex
+or
+$ pdflatex uhm-coe-green-template
+
+where "$" indicates the terminal prompt that you don't need to type and LaTex extension .tex can be omitted or better to be omitted if you have a reference list to be generated using bibtex.
+
 If you want to split a file into multiple sequential pieces, you can use 
 
 \pause
