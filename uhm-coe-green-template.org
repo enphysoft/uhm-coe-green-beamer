@@ -1,0 +1,545 @@
+#+TITLE:  Hydrodynamic load exerted on
+#+SUBTITLE: a moving bundle of hollow fibers  using constraint dissipative hydrodynamics: Hydro-Rattle simulation
+#+author: Albert S. Kim\textsuperscript{1}, Kwang-Jin Lee\textsuperscript{2}, Moo-Seok Lee\textsuperscript{2}, Hyeon-Ju Kim\textsuperscript{3}, and Jung-Hyun Moon\textsuperscript{4}  @@latex:\\ \vspace{.25cm} \\ @@ \tiny   \textsuperscript{1}Civil and Environmental Engineering, University of Hawaii at Manoa, 2540 Dole Street, Holmes 383, Honolulu, Hawai'i, 96822 @@latex:\\ \vspace{.1cm} \\ @@ \textsuperscript{2}Business Division 2, Kolon Industries, Inc., KOLON One&only tower, Magokdong-ro 110, Gangseo-gu, Seoul 07793, Republic of Korea @@latex:\\ \vspace{.1cm} \\ @@ \textsuperscript{3}Offshore Plant and Marine Energy Research Division, Korea Research Institute of Ships and Ocean Engineering, 32 Yuseong-Daero, 1312 Beon-Gil, Daejeon 305-343, Republic of Korea @@latex:\\ \vspace{.1cm} \\ @@ \textsuperscript{4}Seawater Energy Plant Research Center, Korea Research Institute of Ships & Ocean Engineering (KRISO), 32 Yuseong-Daero 1312 Beon-Gil, Yuseong-Gu, Daejeon, KOREA \vspace{-.75cm}
+#+DATE: May 21, 2020, NAMS2020 online
+# +include: "0-header.org"
+
+#+OPTIONS: H:3  num:t ^:nil  toc:t
+#+org-beamer-frame-level: 2
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [t,presentation]
+#+LATEX_HEADER: \date{\tiny\printdayoff\today}
+
+#+LATEX_HEADER:\usefonttheme{professionalfonts}
+#+LATEX_HEADER:\usefonttheme{serif}
+#+LATEX_HEADER:\usepackage[T1]{fontenc}
+#+LATEX_HEADER:\usepackage[utf8]{inputenc}
+#+LATEX_HEADER:\usepackage{ae,aecompl,multimedia,ifthen,ulem,amssymb,amsmath,bm,url}
+#+LATEX_HEADER:\usepackage{beamerthemesplit,beamerthemeshadow}
+#+LATEX_HEADER:\usepackage{booktabs}
+#+LATEX_HEADER:\usepackage{mathpazo,courier} 
+#+LATEX_HEADER:\usepackage{mathpazo}
+#+LATEX_HEADER:\usepackage{subfigure}
+#+LATEX_HEADER:\usepackage{textcomp}
+#+LATEX_HEADER:\usepackage{textpos}
+#+LATEX_HEADER:\usepackage{unicode-math}
+
+#+BEAMER_HEADER:\definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
+#+BEAMER_HEADER:\definecolor{UBCgrey}{rgb}{0.3686, 0.5255, 0.6235} % UBC Grey (secondary)
+#+BEAMER_HEADER:\definecolor{ao(english)}{rgb}{0.0, 0.5, 0.0}
+#+BEAMER_HEADER:\definecolor{darkblue}{rgb}{0.097656, 0.097656, 0.43750}
+#+BEAMER_HEADER:\definecolor{darkgreen}{rgb}{0.0, 0.2, 0.13}
+#+BEAMER_HEADER:\definecolor{dartmouthgreen}{rgb}{0.05, 0.5, 0.06}
+#+BEAMER_HEADER:\definecolor{hawaiigray}{rgb}{0.88281, 0.88281, 0.88281}   % Hex=#E2E2E2
+#+BEAMER_HEADER:\definecolor{hawaiigreen}{rgb}{0.0078125, 0.27734, 0.19141}   % Hex=#024731
+
+
+#+BEAMER_HEADER:\setbeamercolor*{title}{bg=green}
+#+BEAMER_HEADER:\setbeamercolor{structure}{fg=dartmouthgreen}
+#+BEAMER_HEADER:\setbeamercolor{frametitle}{fg=yellow!20}
+#+BEAMER_HEADER:\setbeamercolor{frametitle}{fg=brown,bg=white}
+#+BEAMER_HEADER:\setbeamercolor{frametitle}{fg=brown,bg=green}
+
+#+BEAMER_THEME: Antibes
+#+BEAMER_COLOR_THEME: crane 
+
+#+BEAMER_HEADER:\setbeamercolor{palette primary}{bg=hawaiigreen,fg=white}       % top layers 
+#+BEAMER_HEADER:\setbeamercolor{palette secondary}{bg=UBCblue,fg=black}         % page numbers 
+#+BEAMER_HEADER:\setbeamercolor{palette tertiary}{bg=UBCblue,fg=yellow}
+#+BEAMER_HEADER:\setbeamercolor{palette quaternary}{bg=darkgreen,fg=white}      % second layer
+#+BEAMER_HEADER:\setbeamercolor{structure}{fg=UBCblue}                          % itemize, enumerate, etc
+#+BEAMER_HEADER:\setbeamercolor{section in toc}{fg=UBCblue}                     % TOC sections
+#+BEAMER_HEADER:\setbeamercolor*{title}{bg=white,fg=darkblue}                   % title page 
+#+BEAMER_HEADER:\setbeamercolor{frametitle}{fg=yellow, bg=hawaiigreen}          % frame, each page of slides
+
+#+BEAMER_HEADER:\setbeamertemplate{footline}[frame number]
+#+BEAMER_HEADER:\setbeamerfont{frametitle}{size=\normalsize}
+#+BEAMER_HEADER:\addtobeamertemplate{frametitle}{}{\begin{textblock*}{100mm}(1\textwidth,-0.9cm)\includegraphics[height=.8cm,width=.8cm]{images/coe-emblem-gray.png}\end{textblock*}}
+
+
+* Introduction
+** Overview 
+*** Submerged Membrane Bioreactor: Some Cases
+#+NAME:   fig:lumen-mesh-y
+#+ATTR_ORG: :width 900 # 200/250/300/400/500/600
+#+ATTR_LATEX: :width 3.0in
+#+ATTR_HTML: :width 900px #200/250/300/400/500/600px
+\par Hon. WWWTP, future MBR for greenhouse gas emissions (↓)
+file:figures/SIWWTP.jpg
+\par  EnoQua Membrane Bioreactor
+file:figures/adi-mbr-p.jpg
+# http://mmewater.com/news/greenhouse-gas-emission-estimate-siwwtph
+*** How to Reduce HF Fouling:  Blowing → SHAKING
+#+begin_export latex
+\vspace{0.25cm}
+\begin{columns}[C]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[height=1.75in]{figures/airdiffuser2.jpg}
+\par
+AERO******
+% AEROSTRIP AERATORS
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[height=1.75in]{figures/LENA-img_2018_04_29_18_45.png}
+\par Kolon, LENA
+\end{column}
+\end{columns}
+#+end_export
+- "*Low Energy No Aeration*" (LENA)
+  1. a new  /counter-intuitive/ membrane technology:
+  2. energy saving: $\approx$ 25%
+  3. shaking consumes less energy than blowing.
+  4. [[https://drive.google.com/file/d/1biSZK0caHFg7mzu3PPcHoZ9_O4z7kR4d/view?usp=sharing][video 1]] & [[https://drive.google.com/file/d/1qSkZDnRfBLKfTKIlvScXDiLdXoNnRZLH/view?usp=sharing][video 2]]
+     # 
+
+** Research Task
+*** Does Dynamics of Hollow Fiber Follow Wave Equation? NO!
+#+begin_export latex
+\vspace{0.25cm}
+\begin{columns}[C]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.35\textwidth}
+\centering
+\includegraphics[height=2in]{figures/LENA-img_2018_05_10_14_30.png}
+%\includegraphics[height=2in]{figures/LENA-img_2018_04_29_18_45.png}
+%#
+\par (a) LENA
+\end{column}
+\begin{column}{.55\textwidth} % Right column and width
+\centering
+\includegraphics[height=2in]{figures/vib-guitar-strings.jpg}
+\par (b) Vibrating guitar strings
+\end{column}
+\end{columns}
+
+#+end_export
+# - (a) LENA
+# - (b) Vibrating guitar strings[fn:guitar]
+In (b), string image[fn:guitar]
+[fn:guitar] https://www.sciencesource.com/archive/Vibrations-in-Guitar-Strings-SS2781967.html
+
+* Theory and Simulations
+** Equivalent Sphere
+*** Hollow Fiber Segment vs. Equivalent Sphere
+
+#+begin_export latex
+\vspace{0.25cm}
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[width=1.5in]{figures/hydroblue.jpg}\par
+(a) fiber bundle
+\includegraphics[width=1.5in]{figures/equiv-sphere.jpg}\par
+(b) fiber seg. \& equiv. sphere
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[height=2in]{figures/fig-trimer-rot-crop2-1.png}\par
+(c) fiber as linked sphers
+\end{column}
+\end{columns}
+#+end_export
+*** Hollow Fiber Segment vs. Equivalent Sphere (cont'd)
+#+begin_export latex
+\vspace{0.25cm}
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[height=2.25in]{figures/fig-chain-100-spheres-nearview-t00.png}\par
+%(a) fiber bundle
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[height=2.25in]{figures/fig-chain-100-spheres-nearview-t24.png}\par
+%(c) fiber as linked sphers
+\end{column}
+\end{columns}
+#+end_export
+# 
+- Sphere colors are just for visualization
+- Black dots (6 per sphere) is to see sphere rotation. 
+** Constraint Dynamics 
+*** Theoretical approaches
+**** Holonomic constraints: center-to-center distance
+#+begin_export latex
+\begin{equation}
+\sigma_{k}  =\left(\bm{r}_{k}-\bm{r}_{k+1}\right)^{2}-d_{k,k+1}^{2}=0
+\end{equation}
+#+end_export
+**** Non-Holonomic constraints: position-velocity orthogonality
+#+begin_export latex
+\begin{equation}
+\left(\bm{r}_{k}-\bm{r}_{k+1}\right)\cdot\left(\bm{v}_{k}-\bm{v}_{k+1}\right)=0\label{eq:orthogonal}
+\end{equation}
+#+end_export
+**** Total Force = External + Internal
+1. External:
+   1.  gravitational force (vector-wise)
+   2.  hydrodynamic force/torque (tensor-wise)
+2. Internal
+   1. holonomic
+   2. non-holonomic constraint forces
+*** Constraint Forces
+**** Holonomic Constraint Force on sphere $k$
+#+begin_export latex
+\begin{align}
+m_{k}\bm{a}_{k}^{c} & =\lambda_{k-1}\left(\bm{r}_{k-1}-\bm{r}_{k}\right)-\lambda_{k}\left(\bm{r}_{k}-\bm{r}_{k+1}\right)\label{eq:cstr-frc}
+\end{align}
+#+end_export
+where $\lambda$ is the Lagrange multiplier, to be instantaneously updated as responding to non-internal forces.
+
+**** Non-holonomic Constraint Force on sphere $k$
+#+begin_export latex
+\begin{equation}
+m_{k}\bm{a}_{k}^{n}=\kappa_{k-1}\left(\bm{r}_{k-1}-\bm{r}_{k}\right)-\kappa_{k}\left(\bm{r}_{k}-\bm{r}_{k+1}\right)
+\end{equation}
+#+end_export
+has the same mathematical form, but $\kappa\ne\lambda$.
+**** Constraint  Dynamics Simulation
+- How to efficiently calculate/update $\lambda$ and $\kappa$ for evol.
+*** External Forces
+**** Gravitational + Buoyant Forces
+#+begin_export latex
+\begin{equation}
+\bm{F}_{j}^{G}  =\Delta m_{j}\bm{g}
+\end{equation}
+#+end_export
+where $\Delta m_{j} & =m_{j}-m_{f}$, and $m_{f}is the mass of fluid.
+**** Hydrodynamic Forces/Torques ← Stokesian Dynamics
+#+begin_export latex
+\begin{equation}
+\left[\begin{array}{c}
+\bm{U}^{\infty}-\bm{v}_{j}\\
+\Omega^{\infty}-\bm{\omega}_{j}\\
+\bm{E}^{\infty}\phantom{--\bm{0}_{i}}
+\end{array}\right]=\sum_{k=1}^{N_{p}}\left[\begin{array}{ccc}
+\bm{a}_{jk} & \tilde{\bm{b}}_{jk} & \tilde{\bm{b}}_{jk}\\
+\bm{b}_{jk} & \bm{c}_{jk} & \tilde{\bm{h}}_{jk}\\
+\bm{g}_{jk} & \bm{h}_{jk} & \bm{m}_{jk}
+\end{array}\right]\cdot\left[\begin{array}{c}
+\bm{F}_{k}^{H}\\
+\bm{T}_{k}^{H}\\
+\bm{S}_{k}^{H}
+\end{array}\right]\label{eq:grandMobil}
+\end{equation}
+where $\left[\bm{F}_{k}^{H},\bm{T}_{k}^{H},\bm{S}_{k}^{H}\right]^{\mathrm{tr}}$
+is hydrodynamic force, torque, stresslet vectors, in an ambient flow field:
+\begin{equation}
+\bm{v}^{D}\left(\bm{r}_{j}\right)=\bm{U}^{\infty}+\bm{\Omega}^{\infty}\times\bm{x}+\bm{E}^{\infty}:\bm{x}\quad\mathrm{for}\quad\bm{x}\in S_{j}
+\end{equation}
+#+end_export
+# , acting
+# on sphere $k$ in the presence of other particles, and the matrix
+# multiplied to $\left[\bm{F}_{k}^{H},\bm{T}_{k}^{H},\bm{S}_{k}^{H}\right]^{\mathrm{tr}}$
+# is called the grand mobility matrix.
+
+** Dissipative Hydrodynamics (DHD)
+*** Grand Governing Equation for $N_p$ Connected Spheres
+... requiring to solve a linear system of $11N_{p}\times 11N_{p}$ matrix.
+#+begin_export latex
+\begin{equation}
+\left[\begin{array}{cc}
+m_{k} & 0\\
+0 & I_{k}
+\end{array}\right]\left[\begin{array}{c}
+\bm{a}_{k}\\
+\bm{\alpha}_{k}
+\end{array}\right]=\left[\begin{array}{c}
+\bm{F}_{k}^{H}\\
+\bm{T}_{k}^{H}
+\end{array}\right]+\left[\begin{array}{c}
+\bm{F}_{k}^{E}\\
+0
+\end{array}\right]+\left[\begin{array}{c}
+\bm{F}_{k}^{C}\\
+0
+\end{array}\right]\label{eq:goveq}
+\end{equation}
+#+end_export
+- If $N_{p}= 1,000$, the no. of element = 121,000,000
+-  Memory = element no. times 8 byte → \approx1.0 GB.
+#+NAME:   fig:lumen-mesh-y
+#+ATTR_ORG: :width 900 # 200/250/300/400/500/600
+#+ATTR_LATEX: :width 2.0in
+#+ATTR_HTML: :width 900px #200/250/300/400/500/600px
+file:figures/fig-trimer-crop-1.png
+#
+
+* Results and Discussions
+** Hollow Fiber Specifications
+*** Simulation parameters: rack and fibers
+#+begin_export latex
+
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{|l|l|r|r|}
+\hline
+ & Variables & Value & Value\tabularnewline
+\hline
+\hline
+\multirow{Rack} & Fiber length {[}mm{]}, $L_{f}$ & 1000 & 2000\tabularnewline
+\cline{2-4}
+ & Number of spheres, $N_{p}$ & 500 & 1000\tabularnewline
+\cline{2-4}
+ & Stack height {[}mm{]}, $H=L_{f}/(1+R_{st})$ & 998 & 1996\tabularnewline
+\cline{2-4}
+ & Oscillation Amplitude {[}mm{]}, $A$ & 6.0 & 12.0\tabularnewline
+\cline{2-4}
+ & Oscillation frequency {[}Hz{]}, $\omega$ & 0.46 & 0.46\tabularnewline
+\hline
+\end{tabular}\caption{\label{tab:stack-parameters}Simulation parameters of the rack and
+fibers, where the oscillation amplitude is calculated as $A=0.06\,L_{f}$
+and the stack ratio of $R_{\mathrm{st}}=0.2\,\%$ is used. Based on
+the common frequency, the period of the rack oscillation is calculated
+as $\tau=2.1739$ s.}
+\end{table}
+
+#+end_export
+#
+*** Simulation parameters: rack and fibers
+#+begin_export latex
+\begin{table}[H]
+\centering{}%
+\begin{tabular}{|l|l|r|r|}
+\hline
+ & Variables & PVDF & PET\tabularnewline
+\hline
+\hline
+\multirow{Fiber} & Solid density, $\rho_{s}$ & 1.780 & 1.380\tabularnewline
+\cline{2-4}
+ & Outer diameter {[}mm{]}, $d_{o}=2a_{f}$ & 2.000 & 2.000\tabularnewline
+\cline{2-4}
+ & Inner diameter {[}mm{]}, $d_{i}=2a_{f}^{\prime}$ & 1.600 & 0.700\tabularnewline
+\cline{2-4}
+ & Thickness {[}mm{]}, $a_{f}-a_{^{\prime}f}$ & 0.200 & 0.650\tabularnewline
+\cline{2-4}
+ & Porosity {[}-{]}, $\epsilon$ & 0.650 & 0.650\tabularnewline
+\cline{2-4}
+ & Water-filled fiber material density, $\bar{\rho}_{f}$ & 1.273 & 1.133\tabularnewline
+\cline{2-4}
+ & Mass of cylindrical segment {[}mg{]}, $m_{s}$ & 6.901 & 7.017\tabularnewline
+\hline
+\multirow{Sphere} & Volume {[}mm\textsuperscript{3}{]} & 4.189 & 4.189\tabularnewline
+\cline{2-4}
+ & Specific gravity {[}\textendash {]}, $s_{g}$ & 1.647 & 1.675\tabularnewline
+\hline
+\end{tabular}\caption{\label{tab:HF-parameters}Simulation parameters of the rack and fibers
+and equivalent spheres, made of polyvinylidene fluoride (PVDF) and
+polyethylene terephthalate (PET).}
+\end{table}
+#+end_export
+
+** Chain Dynamics Animation
+*** Snapshots during 6 quarter periods
+#+begin_export latex
+\vspace{0.25cm}
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.25\textwidth}
+\centering
+\includegraphics[height=2.75in]{figures/pvdf_short_time_shots_1p5zoom_crop_anno_arrow2.png}
+\par
+\end{column}
+\begin{column}{.65\textwidth} % Right column and width
+Periodic motion
+\begin{itemize}
+\item 0: initial rightmost position
+\item 1: $t=\tau_{1/4}$ after a \textbf{quarter period}
+\item 2: $t=2\tau_{1/4}$ after two quarter period
+\item 3: $t=3\tau_{1/4}$ after a half period
+\item 4: $t=4\tau_{1/4}$ after a full period
+\item 5: $t=5\tau_{1/4}$ after 1.25 period
+\item 6: $t=6\tau_{1/4}$ after 1.50 period
+\end{itemize}
+where $\tau_{1/4}=\tau/4$ is a quarter period.
+\end{column}
+\end{columns}
+#+end_export
+
+** Constraint Force on Short Chain
+*** [Short Chain] Constraint  Forces in $x-$ Direction
+- Backward & forward constraint forces: anti-symmetric.
+- Near $z=l_{f}/4$, i.e., 25% height, almost $F_x^c\to 0$ [nN].
+#+begin_export latex
+%\vspace{0.25cm}
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[width=1.75in]{figures/cXpvdf500FC1.png}\par
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[width=1.75in]{figures/cXpvdf500FC2.png}\par
+\end{column}
+\end{columns}
+#+end_export
+#
+*** [Short Chain] Constraint  Forces in $z-$ Direction
+- $F_z^c$ is about 10 times stronger than $F_x^c$ [nN].
+- Anti-symmetry appears, but not perfect.
+#+begin_export latex
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[width=1.75in]{figures/cZpvdf500FC1.png}\par
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[width=1.75in]{figures/cZpvdf500FC2.png}\par
+\end{column}
+\end{columns}
+#+end_export
+
+*** [Short Chain] Total  Force  in $x-$ and $z-$ Direction
+- The net total forces [$\mu\rm{N}$] exerted mostly near the bottom.
+- Bottom and top segments can be mechanically reinforced.
+#+begin_export latex
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[width=1.75in]{figures/cXpvdf500FTS.png}\par
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[width=1.75in]{figures/cZpvdf500FTS.png}\par
+\end{column}
+\end{columns}
+#+end_export
+
+** Constraint Force on Long Chain
+***  [Long Chain] Constraint  Forces  in $x-$ Direction
+- The zero-force  [nN] zone becomes vague.
+#+begin_export latex
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[width=1.75in]{figures/cXpvdf1000FC1.png}\par
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[width=1.75in]{figures/cXpvdf1000FC2.png}\par
+\end{column}
+\end{columns}
+#+end_export
+
+***  [Long Chain] Constraint  Forces  in $z-$ Direction
+- The periodicity and anti-symmetry become less apparent.
+- Constraint force unit [nN]
+#+begin_export latex
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[width=1.75in]{figures/cZpvdf1000FC1.png}\par
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[width=1.75in]{figures/cZpvdf1000FC2.png}\par
+\end{column}
+\end{columns}
+#+end_export
+
+***  [Long Chain] Total Force  in $x-$ and $z-$ Direction
+- Unexpected similarity instead of periodicity in  $F_{tot}$ [$\mu\rm{N}$]
+#+begin_export latex
+\begin{columns}[c]
+% The "c" option specifies centered vertical alignment
+% while the "t" option is used for top vertical alignment
+\begin{column}{.45\textwidth}
+\centering
+\includegraphics[width=1.75in]{figures/cXpvdf1000FTS.png}\par
+\end{column}
+\begin{column}{.45\textwidth} % Right column and width
+\centering
+\includegraphics[width=1.75in]{figures/cZpvdf1000FTS.png}\par
+\end{column}
+\end{columns}
+#+end_export
+
+* Concluding Remarks
+** Conclusions
+*** Summary
+1. A single hollow fiber is modeled as a sphere-connected chain using the equivalent sphere.
+2. A short chain reciprocation is within intuitive expectation.
+3. A long chain's geometrical configuration is less predictable. Because
+   1. the return of the full fiber (i.e., the middle zone) is always after the returning of the rack.
+   2. hollow fiber motion is energy-dissipative and entropy-increasing.
+   3. periodicity is not fully conserved, generating random/chaotic displacements
+   4. perhaps good for fouling reduction, but against the fiber durability.
+
+* Acknowledgment
+** Thank You
+*** Acknowledgment
+**** Kolon Industry, Inc.
+#+NAME:   fig:lumen-mesh-y
+#+ATTR_ORG: :width 900 # 200/250/300/400/500/600
+#+ATTR_LATEX: :width 2.0in
+#+ATTR_HTML: :width 900px #200/250/300/400/500/600px
+file:figures/kolon-logo.jpg
+#+begin_export latex
+\vspace{-0.25cm}
+\large
+\centering
+\textbf{KO}rea + Ny\textbf{LON} = KOLON (from 1957)
+\normalsize
+#+end_export
+
+**** Korea Res. Inst. of Ships and Ocean Engineering (KRISO)
+/For steady support and long-term collaborators .../
+#+NAME:   fig:lumen-mesh-y
+#+ATTR_ORG: :width 900 # 200/250/300/400/500/600
+#+ATTR_LATEX: :width 1.75in
+#+ATTR_HTML: :width 900px #200/250/300/400/500/600px
+file:figures/KRISO.png
+
+
+*** Contact Information
+\centering
+\vspace{.3cm}
+\textit{Hydrodynamic load exerted on a moving bundle of hollow fibers  using constraint dissipative hydrodynamics: Hydro-Rattle simulation}
+
+\par \vspace{.3cm}
+Albert S. Kim, Professor
+\par \vspace{.3cm}
+\normalsize
+Civil and Environmental Engineering\par
+College of Engineering $|$ University of Hawaiʻi at Mānoa
+\par
+(808) 956-3718 $|$ albertsk@hawaii.edu
+\par
+\vspace{.3cm}
+http://www.eng.hawaii.edu $|$ http://albertsk.org
+\par
+\vspace{.3cm}
+
+*** Questions and Comments?
+#+NAME:   fig:lumen-mesh-y
+# +CAPTION: in $+y$ direction. 
+#+ATTR_ORG: :width 900 # 200/250/300/400/500/600
+#+ATTR_LATEX: :width 4.0in
+#+ATTR_HTML: :width 900px #200/250/300/400/500/600px
+file:figures/Question-mark.jpg
+ 
+
+
+# \includegraphics[width=2in]{images/coe-logo-title.png}
+    
