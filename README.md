@@ -34,5 +34,5 @@ I hope you enjoy LaTex beamer or Emacs org-mode.
 
 Albert Kim 
 
-(https://albertsk.org/, albertsk@hawaii.edu)
+https://albertsk.org/, albertsk@hawaii.edu
 
