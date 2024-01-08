@@ -1,0 +1,10 @@
+#!/bin/bash
+lyxfile=$1
+newlyxfile=$(echo $lyxfile | sed "s/\.lyx/-lyx.lyx/g")
+rm -f $newlyxfile
+cp $lyxfile  $newlyxfile
+# echo $tmpfile
+# newlyxfile=$tmpfile.lyx
+lyx --export latex $newlyxfile
+rm -f $newlyxfile
+exit 0
